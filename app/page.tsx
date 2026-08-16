@@ -3,6 +3,7 @@ import { TopBar } from "@/components/dashboard/top-bar"
 import { WeatherBanner } from "@/components/dashboard/weather-banner"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { MorningBriefing } from "@/components/dashboard/morning-briefing"
+import { GradesOverview } from "@/components/dashboard/grades-overview"
 import { Assignments } from "@/components/dashboard/assignments"
 import { TodoLists } from "@/components/dashboard/todo-lists"
 
@@ -24,15 +25,20 @@ export default function DashboardPage() {
 
           <div className="mt-8 grid grid-cols-1 items-start gap-5 lg:grid-cols-5">
             <div className="lg:col-span-2">
-              <MorningBriefing />
+              <GradesOverview />
             </div>
             <div className="lg:col-span-3" id="assignments">
               <Assignments />
             </div>
           </div>
 
-          <div className="mt-5">
-            <TodoLists />
+          <div className="mt-5 grid grid-cols-1 items-start gap-5 lg:grid-cols-5">
+            <div className="lg:col-span-2">
+              <MorningBriefing />
+            </div>
+            <div className="lg:col-span-3">
+              <TodoLists />
+            </div>
           </div>
         </main>
       </div>

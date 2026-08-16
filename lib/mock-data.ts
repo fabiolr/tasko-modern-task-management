@@ -187,3 +187,30 @@ export const PERSONAL_TODOS: Todo[] = [
   { id: "p2", text: "Pick up new cleats for track", done: false },
   { id: "p3", text: "Call Grandma back", done: true },
 ]
+
+/* ---------------- Grades ---------------- */
+
+export type Grade = {
+  /** URL-safe id used to anchor the class in the Grades tab. */
+  slug: string
+  course: string
+  teacher: string
+  /** Current percentage grade, e.g. 94.2 */
+  percent: number
+  letter: string
+  /** Change vs. last posted grade, in percentage points. */
+  trend: number
+}
+
+export const GRADES: Grade[] = [
+  { slug: "ap-calculus-bc", course: "AP Calculus BC", teacher: "Ms. Okafor", percent: 96.4, letter: "A", trend: 1.2 },
+  { slug: "ap-chemistry", course: "AP Chemistry", teacher: "Dr. Patel", percent: 91.8, letter: "A-", trend: -0.6 },
+  { slug: "ap-physics-c", course: "AP Physics C", teacher: "Mr. Lindqvist", percent: 88.3, letter: "B+", trend: 2.1 },
+  { slug: "ap-english-lit", course: "AP English Lit", teacher: "Ms. Herrera", percent: 93.5, letter: "A", trend: 0.4 },
+  { slug: "ap-us-history", course: "AP US History", teacher: "Mr. Boone", percent: 84.1, letter: "B", trend: -1.4 },
+]
+
+export const GRADES_FRESHNESS = {
+  minutesAgo: 55,
+  thresholds: { warnAfter: 180, staleAfter: 720 } as FreshnessThresholds,
+}

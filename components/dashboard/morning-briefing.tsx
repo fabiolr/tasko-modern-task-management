@@ -19,7 +19,7 @@ export function MorningBriefing() {
 
   return (
     <SectionCard
-      eyebrow="01"
+      eyebrow="04"
       title="Morning Briefing"
       freshness={<FreshnessIndicator freshness={freshness} />}
     >
