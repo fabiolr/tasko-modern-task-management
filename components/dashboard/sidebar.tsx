@@ -9,6 +9,7 @@ import {
   Newspaper,
   Settings,
   LogOut,
+  ServerCog,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -27,6 +28,10 @@ const menuItems: NavItem[] = [
   { icon: GraduationCap, label: "Grades", href: "/grades" },
   { icon: Bell, label: "Alerts", href: "/alerts", badge: "3" },
   { icon: Newspaper, label: "News", href: "/news" },
+]
+
+const serverItems: NavItem[] = [
+  { icon: ServerCog, label: "Server Health", href: "/server-health" },
 ]
 
 const generalItems: NavItem[] = [
@@ -91,6 +96,13 @@ export function Sidebar({ activeLabel = "Dashboard" }: { activeLabel?: string })
             Menu
           </p>
           <NavList items={menuItems} activeLabel={activeLabel} />
+        </div>
+
+        <div>
+          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Server
+          </p>
+          <NavList items={serverItems} activeLabel={activeLabel} />
         </div>
 
         <div>
