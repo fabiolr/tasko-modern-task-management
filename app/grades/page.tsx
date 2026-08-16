@@ -3,6 +3,7 @@ import { ArrowLeft, TrendingDown, TrendingUp } from "lucide-react"
 import { GRADES } from "@/lib/mock-data"
 import { Sidebar } from "@/components/dashboard/sidebar"
 import { TopBar } from "@/components/dashboard/top-bar"
+import { GradesAnalytics } from "@/components/grades/grades-analytics"
 import { cn } from "@/lib/utils"
 
 export default function GradesPage() {
@@ -29,7 +30,11 @@ export default function GradesPage() {
             Current standing across all classes this term.
           </p>
 
-          <div className="mt-8 flex flex-col gap-4">
+          <div className="mt-8">
+            <GradesAnalytics />
+          </div>
+
+          <div className="mt-6 flex flex-col gap-4">
             {GRADES.map((g) => {
               const Trend = g.trend >= 0 ? TrendingUp : TrendingDown
               return (

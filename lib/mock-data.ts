@@ -262,6 +262,26 @@ export const GRADES_FRESHNESS = {
   thresholds: { warnAfter: 180, staleAfter: 720 } as FreshnessThresholds,
 }
 
+/**
+ * Historical grade snapshots. Each entry is a data upload/sync point during the
+ * term; the last value of every series matches the current percent in GRADES.
+ * When the real grade sync lands, append snapshots here in the same shape and
+ * the analytics graph updates automatically.
+ */
+export const GRADE_HISTORY_LABELS = [
+  "Feb 3", "Feb 17", "Mar 3", "Mar 17", "Mar 31", "Apr 14", "Apr 28", "May 12",
+]
+
+export const GRADE_HISTORY: Record<string, number[]> = {
+  "ap-calculus-bc": [91.0, 92.4, 93.1, 93.8, 94.6, 95.2, 95.2, 96.4],
+  "ap-chemistry": [88.5, 89.9, 90.4, 92.6, 93.1, 92.8, 92.4, 91.8],
+  "ap-physics-c": [82.0, 83.6, 84.1, 85.9, 86.2, 86.0, 86.2, 88.3],
+  "ap-english-lit": [90.2, 91.0, 91.8, 92.4, 92.9, 93.1, 93.1, 93.5],
+  "ap-us-history": [86.5, 87.2, 86.0, 85.4, 85.9, 85.5, 85.5, 84.1],
+  "ap-spanish-lang": [87.0, 88.1, 88.9, 89.4, 89.8, 90.0, 89.8, 90.7],
+  "ap-cs-a": [93.0, 94.2, 95.1, 95.6, 96.0, 95.6, 95.6, 97.2],
+}
+
 /* ---------------- Calendar ---------------- */
 
 export type CalendarEventKind = "class" | "assignment" | "exam" | "activity" | "personal"
@@ -305,4 +325,193 @@ export const CALENDAR_EVENTS: CalendarEvent[] = [
 export const CALENDAR_FRESHNESS = {
   minutesAgo: 8,
   thresholds: { warnAfter: 60, staleAfter: 240 } as FreshnessThresholds,
+}
+
+/* ---------------- Alerts ---------------- */
+
+export type AlertSeverity = "urgent" | "warning" | "info"
+export type AlertCategory = "Grades" | "Assignments" | "Schedule" | "School" | "System"
+
+export type Alert = {
+  id: string
+  severity: AlertSeverity
+  category: AlertCategory
+  title: string
+  detail: string
+  /** Relative time string for display. */
+  time: string
+  read: boolean
+  /** Optional in-app link the alert points to. */
+  href?: string
+}
+
+export const ALERTS: Alert[] = [
+  {
+    id: "al1",
+    severity: "urgent",
+    category: "Assignments",
+    title: "Chem lab report due tonight",
+    detail: "AP Chemistry — Enthalpy of Reaction is due at 11:59 PM and is still marked in progress.",
+    time: "20m ago",
+    read: false,
+    href: "/assignments",
+  },
+  {
+    id: "al2",
+    severity: "warning",
+    category: "Grades",
+    title: "AP US History dropped 1.4 pts",
+    detail: "A missing reading quiz posted, lowering your grade to 84.1% (B).",
+    time: "1h ago",
+    read: false,
+    href: "/grades#ap-us-history",
+  },
+  {
+    id: "al3",
+    severity: "warning",
+    category: "System",
+    title: "Google Classroom sync is stale",
+    detail: "Last successful sync was about 3 days ago. Some assignments may be missing.",
+    time: "3h ago",
+    read: false,
+  },
+  {
+    id: "al4",
+    severity: "info",
+    category: "Schedule",
+    title: "College info night added",
+    detail: "A new event was added to your calendar for Wednesday at 6:30 PM.",
+    time: "5h ago",
+    read: true,
+    href: "/calendar",
+  },
+  {
+    id: "al5",
+    severity: "info",
+    category: "School",
+    title: "Early dismissal Friday",
+    detail: "Classes end at 12:30 PM for faculty development. Bus schedule adjusted accordingly.",
+    time: "Yesterday",
+    read: true,
+  },
+  {
+    id: "al6",
+    severity: "info",
+    category: "Grades",
+    title: "AP Calculus BC up 1.2 pts",
+    detail: "Your latest problem set pushed you to a 96.4% (A).",
+    time: "Yesterday",
+    read: true,
+    href: "/grades#ap-calculus-bc",
+  },
+]
+
+export const ALERTS_FRESHNESS = {
+  minutesAgo: 20,
+  thresholds: { warnAfter: 120, staleAfter: 360 } as FreshnessThresholds,
+}
+
+/* ---------------- News ---------------- */
+
+export type NewsCategory = "World" | "Politics" | "Business" | "Technology" | "Science" | "Sports"
+
+export type NewsSource = {
+  id: string
+  name: string
+  /** Whether this feed is currently wired to a live backend. */
+  connected: boolean
+}
+
+export type NewsArticle = {
+  id: string
+  sourceId: string
+  category: NewsCategory
+  headline: string
+  summary: string
+  time: string
+  /** Optional external link (kept empty for the sample feed). */
+  url?: string
+}
+
+/**
+ * News sources. WorldMonitor is the first target integration; more feeds can be
+ * added here and articles will flow through the same NewsArticle shape.
+ */
+export const NEWS_SOURCES: NewsSource[] = [
+  { id: "worldmonitor", name: "WorldMonitor", connected: false },
+  { id: "the-ledger", name: "The Ledger", connected: false },
+  { id: "orbit-tech", name: "Orbit Tech", connected: false },
+  { id: "campus-wire", name: "Campus Wire", connected: false },
+]
+
+export const NEWS_ARTICLES: NewsArticle[] = [
+  {
+    id: "n1",
+    sourceId: "worldmonitor",
+    category: "World",
+    headline: "Global summit reaches tentative climate financing deal",
+    summary: "Delegates from 40 nations agreed on a framework to fund adaptation projects, though key details remain unresolved.",
+    time: "32m ago",
+  },
+  {
+    id: "n2",
+    sourceId: "worldmonitor",
+    category: "Politics",
+    headline: "Coalition talks stall over budget priorities",
+    summary: "Negotiators paused discussions late Sunday, with public spending and tax reform the main sticking points.",
+    time: "1h ago",
+  },
+  {
+    id: "n3",
+    sourceId: "the-ledger",
+    category: "Business",
+    headline: "Markets steady as central bank signals patience on rates",
+    summary: "Equities closed narrowly mixed after officials indicated no immediate change to policy is planned.",
+    time: "2h ago",
+  },
+  {
+    id: "n4",
+    sourceId: "orbit-tech",
+    category: "Technology",
+    headline: "New open model rivals top labs on reasoning benchmarks",
+    summary: "The release, published with full weights, posts competitive scores while running on consumer hardware.",
+    time: "3h ago",
+  },
+  {
+    id: "n5",
+    sourceId: "orbit-tech",
+    category: "Science",
+    headline: "Probe returns first close images of inner asteroid belt",
+    summary: "Early data suggests a more varied composition than models predicted, researchers said.",
+    time: "4h ago",
+  },
+  {
+    id: "n6",
+    sourceId: "the-ledger",
+    category: "Business",
+    headline: "Retailers report cautious but resilient spring spending",
+    summary: "Consumer demand held up in categories tied to travel and dining, offsetting softer electronics sales.",
+    time: "5h ago",
+  },
+  {
+    id: "n7",
+    sourceId: "campus-wire",
+    category: "Sports",
+    headline: "Regional track finals set for this weekend",
+    summary: "Local schools qualified a record number of athletes across sprint and distance events.",
+    time: "6h ago",
+  },
+  {
+    id: "n8",
+    sourceId: "worldmonitor",
+    category: "World",
+    headline: "Relief corridor reopens after week-long closure",
+    summary: "Aid convoys resumed movement following a negotiated ceasefire in the affected region.",
+    time: "8h ago",
+  },
+]
+
+export const NEWS_FRESHNESS = {
+  minutesAgo: 32,
+  thresholds: { warnAfter: 90, staleAfter: 240 } as FreshnessThresholds,
 }

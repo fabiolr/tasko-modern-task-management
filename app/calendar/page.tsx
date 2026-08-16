@@ -19,7 +19,7 @@ export default function CalendarPage() {
       <div className="lg:pl-64">
         <TopBar />
 
-        <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
+        <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"

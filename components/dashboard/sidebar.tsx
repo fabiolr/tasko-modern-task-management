@@ -30,8 +30,8 @@ const menuItems: NavItem[] = [
   { icon: ClipboardList, label: "Assignments", href: "/assignments", badge: "6" },
   { icon: CalendarDays, label: "Calendar", href: "/calendar" },
   { icon: GraduationCap, label: "Grades", href: "/grades" },
-  { icon: Bell, label: "Alerts", href: "/#alerts", badge: "3" },
-  { icon: Newspaper, label: "News", href: "/#news" },
+  { icon: Bell, label: "Alerts", href: "/alerts", badge: "3" },
+  { icon: Newspaper, label: "News", href: "/news" },
 ]
 
 const generalItems: NavItem[] = [
