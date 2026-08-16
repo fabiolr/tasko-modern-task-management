@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import {
   LayoutDashboard,
   ClipboardList,
@@ -9,14 +8,10 @@ import {
   Bell,
   Newspaper,
   Settings,
-  HelpCircle,
   LogOut,
-  Moon,
-  Sun,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { useTheme } from "@/components/theme-provider"
 
 type NavItem = {
   icon: typeof LayoutDashboard
@@ -35,8 +30,7 @@ const menuItems: NavItem[] = [
 ]
 
 const generalItems: NavItem[] = [
-  { icon: Settings, label: "Settings", href: "/#settings" },
-  { icon: HelpCircle, label: "Help", href: "/#help" },
+  { icon: Settings, label: "Settings", href: "/settings" },
   { icon: LogOut, label: "Logout", href: "/logout" },
 ]
 
@@ -78,28 +72,6 @@ function NavList({ items, activeLabel }: { items: NavItem[]; activeLabel: string
   )
 }
 
-function ThemeToggleRow() {
-  const { resolvedTheme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-  const isDark = resolvedTheme === "dark"
-
-  return (
-    <button
-      type="button"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={mounted ? `Switch to ${isDark ? "light" : "dark"} mode` : "Toggle theme"}
-      className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:bg-secondary hover:text-foreground"
-    >
-      <span className="relative flex size-4 shrink-0 items-center justify-center" aria-hidden>
-        <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-        <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      </span>
-      <span className="truncate">{mounted && isDark ? "Light mode" : "Dark mode"}</span>
-    </button>
-  )
-}
-
 export function Sidebar({ activeLabel = "Dashboard" }: { activeLabel?: string }) {
   return (
     <aside className="flex h-full w-64 flex-col border-r border-border bg-sidebar p-4">
@@ -126,9 +98,6 @@ export function Sidebar({ activeLabel = "Dashboard" }: { activeLabel?: string })
             General
           </p>
           <NavList items={generalItems} activeLabel={activeLabel} />
-          <div className="mt-0.5">
-            <ThemeToggleRow />
-          </div>
         </div>
       </div>
     </aside>
