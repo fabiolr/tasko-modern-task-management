@@ -7,6 +7,7 @@ import {
   GraduationCap,
   Bell,
   Newspaper,
+  Bot,
   Settings,
   LogOut,
   ServerCog,
@@ -28,6 +29,7 @@ const menuItems: NavItem[] = [
   { icon: GraduationCap, label: "Grades", href: "/grades" },
   { icon: Bell, label: "Alerts", href: "/alerts", badge: "3" },
   { icon: Newspaper, label: "News", href: "/news" },
+  { icon: Bot, label: "Chatbot", href: "/chatbot" },
 ]
 
 const serverItems: NavItem[] = [
