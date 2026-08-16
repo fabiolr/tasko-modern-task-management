@@ -108,8 +108,8 @@ export function Sidebar({ activeLabel = "Dashboard" }: { activeLabel?: string })
           <GraduationCap className="size-5" aria-hidden />
         </div>
         <div className="leading-tight">
-          <p className="text-base font-semibold text-foreground">MrT</p>
-          <p className="text-[11px] text-muted-foreground">Dash</p>
+          <p className="text-base font-semibold text-foreground">MrT - Dash</p>
+          <p className="text-[11px] text-muted-foreground">Student Dashboard</p>
         </div>
       </Link>
 

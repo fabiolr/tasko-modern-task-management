@@ -3,7 +3,7 @@ import type { FreshnessThresholds } from "@/lib/freshness"
 export const USER = {
   name: "Teo",
   fullName: "Teo Ribeiro",
-  email: "teo.ribeiro@gmail.com",
+  email: "teoribeiro2132@gmail.com",
   avatar: "/profile.jpg",
   schoolTimeZone: "America/New_York",
   schoolTimeZoneLabel: "school time",
@@ -208,6 +208,8 @@ export const GRADES: Grade[] = [
   { slug: "ap-physics-c", course: "AP Physics C", teacher: "Mr. Lindqvist", percent: 88.3, letter: "B+", trend: 2.1 },
   { slug: "ap-english-lit", course: "AP English Lit", teacher: "Ms. Herrera", percent: 93.5, letter: "A", trend: 0.4 },
   { slug: "ap-us-history", course: "AP US History", teacher: "Mr. Boone", percent: 84.1, letter: "B", trend: -1.4 },
+  { slug: "ap-spanish-lang", course: "AP Spanish Lang", teacher: "Sra. Delgado", percent: 90.7, letter: "A-", trend: 0.9 },
+  { slug: "ap-cs-a", course: "AP Computer Science A", teacher: "Mr. Nakamura", percent: 97.2, letter: "A", trend: 1.6 },
 ]
 
 export const GRADES_FRESHNESS = {
