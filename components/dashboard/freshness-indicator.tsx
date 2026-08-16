@@ -21,7 +21,7 @@ const CONFIG: Record<
   stale: {
     label: "Stale",
     Icon: CircleAlert,
-    classes: "border-stale/40 bg-stale-muted text-stale-foreground",
+    classes: "border-stale/40 bg-stale-muted text-stale",
     dot: "bg-stale",
   },
 }
