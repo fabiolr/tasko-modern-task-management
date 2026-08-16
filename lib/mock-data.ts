@@ -69,6 +69,8 @@ export const BRIEFING_FRESHNESS = {
 
 export type AssignmentSource = "Veracross" | "Google Classroom"
 
+export type AssignmentStatus = "not-started" | "in-progress" | "submitted"
+
 export type Assignment = {
   id: string
   course: string
@@ -78,6 +80,14 @@ export type Assignment = {
   points: number
   source: AssignmentSource
   done: boolean
+  /** Assignment type, used for a small category label. */
+  type: "Homework" | "Lab" | "Essay" | "Exam" | "Reading" | "Project"
+  /** Longer description shown on the full Assignments page. */
+  description: string
+  /** Rough estimated effort in minutes. */
+  estMinutes: number
+  /** Work status independent of the done checkbox. */
+  status: AssignmentStatus
 }
 
 export const ASSIGNMENTS: Assignment[] = [
@@ -90,6 +100,11 @@ export const ASSIGNMENTS: Assignment[] = [
     points: 50,
     source: "Veracross",
     done: false,
+    type: "Lab",
+    description:
+      "Write up the calorimetry lab: include the calculated ΔH, a full error analysis, and the graph of temperature vs. time. Sections should follow the standard lab report format.",
+    estMinutes: 120,
+    status: "in-progress",
   },
   {
     id: "a2",
@@ -100,6 +115,11 @@ export const ASSIGNMENTS: Assignment[] = [
     points: 30,
     source: "Google Classroom",
     done: false,
+    type: "Homework",
+    description:
+      "Problems 9.1–9.14 covering torque, moment of inertia, and angular momentum conservation. Show all free-body diagrams.",
+    estMinutes: 75,
+    status: "not-started",
   },
   {
     id: "a3",
@@ -110,6 +130,11 @@ export const ASSIGNMENTS: Assignment[] = [
     points: 15,
     source: "Google Classroom",
     done: true,
+    type: "Reading",
+    description:
+      "Close-read Act IV and annotate for motifs of madness and surveillance. At least three margin notes per scene.",
+    estMinutes: 45,
+    status: "submitted",
   },
   {
     id: "a4",
@@ -120,6 +145,11 @@ export const ASSIGNMENTS: Assignment[] = [
     points: 25,
     source: "Veracross",
     done: false,
+    type: "Homework",
+    description:
+      "Odd-numbered exercises 1–29. Focus on choosing u and dv strategically and recognizing repeated integration by parts.",
+    estMinutes: 60,
+    status: "not-started",
   },
   {
     id: "a5",
@@ -130,6 +160,11 @@ export const ASSIGNMENTS: Assignment[] = [
     points: 20,
     source: "Veracross",
     done: false,
+    type: "Essay",
+    description:
+      "Draft a thesis and outline body paragraphs using at least four of the seven provided documents. Bring a printed copy to class.",
+    estMinutes: 50,
+    status: "not-started",
   },
   {
     id: "a6",
@@ -140,6 +175,11 @@ export const ASSIGNMENTS: Assignment[] = [
     points: 40,
     source: "Google Classroom",
     done: false,
+    type: "Exam",
+    description:
+      "Timed practice exam on thermodynamics and kinetics. Complete in one sitting and submit a photo of your work.",
+    estMinutes: 90,
+    status: "not-started",
   },
   {
     id: "a7",
@@ -150,6 +190,11 @@ export const ASSIGNMENTS: Assignment[] = [
     points: 60,
     source: "Veracross",
     done: false,
+    type: "Essay",
+    description:
+      "Full first draft (900–1100 words) comparing the tragic arc of Hamlet with one other protagonist studied this year. MLA citations required.",
+    estMinutes: 150,
+    status: "not-started",
   },
 ]
 
@@ -215,4 +260,49 @@ export const GRADES: Grade[] = [
 export const GRADES_FRESHNESS = {
   minutesAgo: 55,
   thresholds: { warnAfter: 180, staleAfter: 720 } as FreshnessThresholds,
+}
+
+/* ---------------- Calendar ---------------- */
+
+export type CalendarEventKind = "class" | "assignment" | "exam" | "activity" | "personal"
+
+export type CalendarEvent = {
+  id: string
+  /** ISO date, YYYY-MM-DD. */
+  date: string
+  title: string
+  /** Display time range, e.g. "9:00 – 9:50 AM". All-day if omitted. */
+  time?: string
+  kind: CalendarEventKind
+  location?: string
+}
+
+/**
+ * The calendar is seeded to May 2026 to line up with the morning briefings.
+ * When the real Apple Calendar backend lands, replace CALENDAR_EVENTS (and
+ * CALENDAR_REFERENCE_TODAY) with live data in this same shape.
+ */
+export const CALENDAR_REFERENCE_TODAY = "2026-05-18"
+
+export const CALENDAR_EVENTS: CalendarEvent[] = [
+  { id: "e1", date: "2026-05-18", title: "AP Chemistry", time: "8:00 – 8:50 AM", kind: "class", location: "Room 214" },
+  { id: "e2", date: "2026-05-18", title: "AP Physics C", time: "9:00 – 9:50 AM", kind: "class", location: "Room 118" },
+  { id: "e3", date: "2026-05-18", title: "Chem Lab Report due", time: "11:59 PM", kind: "assignment" },
+  { id: "e4", date: "2026-05-18", title: "Track practice", time: "3:30 – 5:00 PM", kind: "activity", location: "Field" },
+  { id: "e5", date: "2026-05-19", title: "AP Calculus BC", time: "10:00 – 10:50 AM", kind: "class", location: "Room 203" },
+  { id: "e6", date: "2026-05-19", title: "DBQ Outline due", time: "3:00 PM", kind: "assignment" },
+  { id: "e7", date: "2026-05-20", title: "AP US History", time: "9:00 – 9:50 AM", kind: "class", location: "Room 140" },
+  { id: "e8", date: "2026-05-20", title: "College info night", time: "6:30 – 8:00 PM", kind: "personal", location: "Auditorium" },
+  { id: "e9", date: "2026-05-21", title: "Chem Unit 6 Exam", time: "8:00 – 9:30 AM", kind: "exam", location: "Room 214" },
+  { id: "e10", date: "2026-05-22", title: "English Essay Draft due", time: "11:59 PM", kind: "assignment" },
+  { id: "e11", date: "2026-05-22", title: "Track meet vs. Ransom", time: "4:00 PM", kind: "activity", location: "Away" },
+  { id: "e12", date: "2026-05-25", title: "Memorial Day — no school", kind: "personal" },
+  { id: "e13", date: "2026-05-27", title: "AP Spanish oral exam", time: "1:00 – 1:45 PM", kind: "exam", location: "Room 106" },
+  { id: "e14", date: "2026-05-15", title: "AP CS A project demo", time: "2:00 – 2:45 PM", kind: "activity", location: "Lab B" },
+  { id: "e15", date: "2026-05-12", title: "Calculus review set due", time: "11:59 PM", kind: "assignment" },
+]
+
+export const CALENDAR_FRESHNESS = {
+  minutesAgo: 8,
+  thresholds: { warnAfter: 60, staleAfter: 240 } as FreshnessThresholds,
 }

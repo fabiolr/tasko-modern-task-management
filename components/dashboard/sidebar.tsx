@@ -27,8 +27,8 @@ type NavItem = {
 
 const menuItems: NavItem[] = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/" },
-  { icon: ClipboardList, label: "Assignments", href: "/#assignments", badge: "6" },
-  { icon: CalendarDays, label: "Calendar", href: "/#calendar" },
+  { icon: ClipboardList, label: "Assignments", href: "/assignments", badge: "6" },
+  { icon: CalendarDays, label: "Calendar", href: "/calendar" },
   { icon: GraduationCap, label: "Grades", href: "/grades" },
   { icon: Bell, label: "Alerts", href: "/#alerts", badge: "3" },
   { icon: Newspaper, label: "News", href: "/#news" },

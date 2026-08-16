@@ -1,102 +1,220 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, ChevronRight, Video } from "lucide-react"
-import { useState } from "react"
+import { useMemo, useState } from "react"
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react"
+import { cn } from "@/lib/utils"
+import {
+  CALENDAR_EVENTS,
+  CALENDAR_REFERENCE_TODAY,
+  type CalendarEvent,
+  type CalendarEventKind,
+} from "@/lib/mock-data"
 
-const events = [
-  { id: 1, title: "Team Standup", time: "09:00 AM", duration: "30 min", type: "meeting", color: "bg-blue-500" },
-  { id: 2, title: "Design Review", time: "11:00 AM", duration: "1 hour", type: "review", color: "bg-purple-500" },
-  {
-    id: 3,
-    title: "Client Presentation",
-    time: "02:00 PM",
-    duration: "2 hours",
-    type: "presentation",
-    color: "bg-green-600",
-  },
-  { id: 4, title: "Code Review Session", time: "04:30 PM", duration: "45 min", type: "meeting", color: "bg-amber-500" },
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
 ]
 
-const daysInMonth = Array.from({ length: 30 }, (_, i) => i + 1)
-const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const KIND_META: Record<CalendarEventKind, { label: string; dot: string; chip: string }> = {
+  class: { label: "Class", dot: "bg-primary", chip: "bg-primary/10 text-primary" },
+  assignment: { label: "Assignment", dot: "bg-warn", chip: "bg-warn-muted text-warn-foreground" },
+  exam: { label: "Exam", dot: "bg-stale", chip: "bg-stale-muted text-stale-foreground" },
+  activity: { label: "Activity", dot: "bg-chart-3", chip: "bg-chart-3/15 text-foreground" },
+  personal: { label: "Personal", dot: "bg-muted-foreground", chip: "bg-secondary text-muted-foreground" },
+}
+
+/** Parse a YYYY-MM-DD string into local date parts (no timezone shift). */
+function parseISO(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number)
+  return { year: y, month: m - 1, day: d }
+}
+
+function toISO(year: number, month: number, day: number) {
+  const mm = String(month + 1).padStart(2, "0")
+  const dd = String(day).padStart(2, "0")
+  return `${year}-${mm}-${dd}`
+}
 
 export function CalendarContent() {
-  const [currentDate] = useState(new Date())
-  const today = 17
+  const todayParts = parseISO(CALENDAR_REFERENCE_TODAY)
+  const todayISO = CALENDAR_REFERENCE_TODAY
+
+  const [view, setView] = useState({ year: todayParts.year, month: todayParts.month })
+  const [selected, setSelected] = useState(todayISO)
+
+  const eventsByDate = useMemo(() => {
+    const map = new Map<string, CalendarEvent[]>()
+    for (const e of CALENDAR_EVENTS) {
+      const list = map.get(e.date) ?? []
+      list.push(e)
+      map.set(e.date, list)
+    }
+    return map
+  }, [])
+
+  const firstWeekday = new Date(view.year, view.month, 1).getDay()
+  const daysInMonth = new Date(view.year, view.month + 1, 0).getDate()
+  const cells: (number | null)[] = [
+    ...Array.from({ length: firstWeekday }, () => null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ]
+
+  const goMonth = (delta: number) => {
+    setView((v) => {
+      const next = new Date(v.year, v.month + delta, 1)
+      return { year: next.getFullYear(), month: next.getMonth() }
+    })
+  }
+
+  const selectedEvents = eventsByDate.get(selected) ?? []
+  const selectedParts = parseISO(selected)
+  const selectedLabel = new Date(
+    selectedParts.year,
+    selectedParts.month,
+    selectedParts.day,
+  ).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Button variant="outline" size="icon">
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <span className="font-semibold min-w-[120px] text-center">November 2024</span>
-          <Button variant="outline" size="icon">
-            <ChevronRight className="w-4 h-4" />
-          </Button>
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+      {/* Calendar grid */}
+      <div className="rounded-2xl border border-border bg-card p-5 shadow-sm lg:col-span-2">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground">
+            {MONTHS[view.month]} {view.year}
+          </h2>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => goMonth(-1)}
+              className="flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              aria-label="Previous month"
+            >
+              <ChevronLeft className="size-4" aria-hidden />
+            </button>
+            <button
+              type="button"
+              onClick={() => setView({ year: todayParts.year, month: todayParts.month })}
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              Today
+            </button>
+            <button
+              type="button"
+              onClick={() => goMonth(1)}
+              className="flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              aria-label="Next month"
+            >
+              <ChevronRight className="size-4" aria-hidden />
+            </button>
+          </div>
+        </div>
+
+        <div className="mb-2 grid grid-cols-7 gap-1">
+          {WEEKDAYS.map((d) => (
+            <div key={d} className="py-1 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {d}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 gap-1">
+          {cells.map((day, i) => {
+            if (day === null) return <div key={`blank-${i}`} />
+            const iso = toISO(view.year, view.month, day)
+            const dayEvents = eventsByDate.get(iso) ?? []
+            const isToday = iso === todayISO
+            const isSelected = iso === selected
+            return (
+              <button
+                key={iso}
+                type="button"
+                onClick={() => setSelected(iso)}
+                aria-pressed={isSelected}
+                className={cn(
+                  "flex min-h-16 flex-col rounded-lg border p-1.5 text-left transition-colors",
+                  isSelected
+                    ? "border-primary bg-primary/5"
+                    : "border-transparent hover:border-border hover:bg-secondary/60",
+                )}
+              >
+                <span
+                  className={cn(
+                    "flex size-6 items-center justify-center rounded-full text-xs font-semibold tabular-nums",
+                    isToday
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground",
+                  )}
+                >
+                  {day}
+                </span>
+                <span className="mt-1 flex flex-wrap gap-0.5">
+                  {dayEvents.slice(0, 4).map((e) => (
+                    <span
+                      key={e.id}
+                      className={cn("size-1.5 rounded-full", KIND_META[e.kind].dot)}
+                      aria-hidden
+                    />
+                  ))}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Legend */}
+        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-border/70 pt-3">
+          {(Object.keys(KIND_META) as CalendarEventKind[]).map((k) => (
+            <span key={k} className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <span className={cn("size-2 rounded-full", KIND_META[k].dot)} aria-hidden />
+              {KIND_META[k].label}
+            </span>
+          ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 p-6">
-          <div className="grid grid-cols-7 gap-2 mb-4">
-            {weekDays.map((day) => (
-              <div key={day} className="text-center text-sm font-semibold text-muted-foreground py-2">
-                {day}
-              </div>
-            ))}
-          </div>
-          <div className="grid grid-cols-7 gap-2">
-            {daysInMonth.map((day) => (
-              <button
-                key={day}
-                className={`
-                  aspect-square rounded-lg flex items-center justify-center text-sm font-medium
-                  transition-all duration-300 hover:scale-110
-                  ${
-                    day === today
-                      ? "bg-primary text-primary-foreground shadow-lg"
-                      : "hover:bg-secondary text-foreground"
-                  }
-                  ${day < today ? "opacity-40" : ""}
-                `}
-              >
-                {day}
-              </button>
-            ))}
-          </div>
-        </Card>
+      {/* Day detail */}
+      <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <h3 className="text-sm font-bold uppercase tracking-wide text-foreground">{selectedLabel}</h3>
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {selectedEvents.length} {selectedEvents.length === 1 ? "event" : "events"}
+        </p>
 
-        <Card className="p-6">
-          <h3 className="font-semibold text-lg mb-4">Today's Events</h3>
-          <div className="space-y-3">
-            {events.map((event, index) => (
-              <div
-                key={event.id}
-                className="p-3 rounded-lg border border-border hover:shadow-md transition-all duration-300 cursor-pointer animate-slide-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="flex items-start gap-3">
-                  <div className={`w-1 h-full rounded-full ${event.color}`} />
-                  <div className="flex-1 space-y-1">
-                    <h4 className="font-medium text-sm">{event.title}</h4>
-                    <p className="text-xs text-muted-foreground">{event.time}</p>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">
-                        {event.duration}
-                      </Badge>
-                      {event.type === "meeting" && <Video className="w-3 h-3 text-muted-foreground" />}
+        <div className="mt-4 space-y-2.5">
+          {selectedEvents.length === 0 ? (
+            <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-sm text-muted-foreground">
+              Nothing scheduled.
+            </p>
+          ) : (
+            selectedEvents.map((e) => (
+              <div key={e.id} className="rounded-xl border border-border p-3">
+                <div className="flex items-start gap-2.5">
+                  <span className={cn("mt-1 size-2.5 shrink-0 rounded-full", KIND_META[e.kind].dot)} aria-hidden />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-sm font-medium text-foreground">{e.title}</p>
+                      <span
+                        className={cn(
+                          "shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
+                          KIND_META[e.kind].chip,
+                        )}
+                      >
+                        {KIND_META[e.kind].label}
+                      </span>
                     </div>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{e.time ?? "All day"}</p>
+                    {e.location ? (
+                      <p className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin className="size-3" aria-hidden />
+                        {e.location}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </Card>
+            ))
+          )}
+        </div>
       </div>
     </div>
   )
