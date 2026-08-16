@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { Clock } from "lucide-react"
 import { USER } from "@/lib/mock-data"
-import { ThemeToggle } from "@/components/dashboard/theme-toggle"
 
 function offsetMinutes(timeZone: string, date: Date): number {
   const utc = new Date(date.toLocaleString("en-US", { timeZone: "UTC" }))
@@ -78,7 +77,6 @@ export function DashboardHeader({ guest = false }: { guest?: boolean }) {
               : USER.schoolTimeZoneLabel}
           </span>
         </div>
-        <ThemeToggle />
       </div>
     </header>
   )

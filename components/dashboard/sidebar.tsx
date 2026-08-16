@@ -1,106 +1,105 @@
 "use client"
 
-import { LayoutDashboard, CheckSquare, Calendar, BarChart3, Users, Settings, HelpCircle, LogOut } from "lucide-react"
+import {
+  LayoutDashboard,
+  ClipboardList,
+  CalendarDays,
+  GraduationCap,
+  Bell,
+  Newspaper,
+  Settings,
+  HelpCircle,
+  LogOut,
+} from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 
-const menuItems = [
+type NavItem = {
+  icon: typeof LayoutDashboard
+  label: string
+  href: string
+  badge?: string
+}
+
+const menuItems: NavItem[] = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/" },
-  { icon: CheckSquare, label: "Tasks", badge: "124", href: "/tasks" },
-  { icon: Calendar, label: "Calendar", href: "/calendar" },
-  { icon: BarChart3, label: "Analytics", href: "/analytics" },
-  { icon: Users, label: "Team", href: "/team" },
+  { icon: ClipboardList, label: "Assignments", href: "/#assignments", badge: "6" },
+  { icon: CalendarDays, label: "Calendar", href: "/#calendar" },
+  { icon: GraduationCap, label: "Grades", href: "/#grades" },
+  { icon: Bell, label: "Alerts", href: "/#alerts", badge: "3" },
+  { icon: Newspaper, label: "News", href: "/#news" },
 ]
 
-const generalItems = [
-  { icon: Settings, label: "Settings", href: "/settings" },
-  { icon: HelpCircle, label: "Help", href: "/help" },
+const generalItems: NavItem[] = [
+  { icon: Settings, label: "Settings", href: "/#settings" },
+  { icon: HelpCircle, label: "Help", href: "/#help" },
   { icon: LogOut, label: "Logout", href: "/logout" },
 ]
 
-export function Sidebar() {
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  const pathname = usePathname()
-
+function NavList({ items, activeLabel }: { items: NavItem[]; activeLabel: string }) {
   return (
-    <aside className="fixed top-0 left-0 w-64 bg-card border-r border-border p-4 h-screen overflow-y-auto lg:block">
-      <div className="flex items-center gap-2 mb-6 group cursor-pointer">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center transition-transform group-hover:scale-110 duration-300 relative">
-            <div
-              className="w-1.5 h-1.5 rounded-full bg-primary-foreground absolute"
-              style={{ top: "30%", left: "30%" }}
-            />
-            <div
-              className="w-1.5 h-1.5 rounded-full bg-primary-foreground absolute"
-              style={{ top: "30%", right: "30%" }}
-            />
-            <div className="w-3 h-1.5 border-b-2 border-primary-foreground rounded-full absolute bottom-2.5" />
-          </div>
-          <span className="text-lg font-semibold text-foreground">Tasko</span>
-        </Link>
-      </div>
+    <nav className="space-y-0.5">
+      {items.map((item) => {
+        const isActive = item.label === activeLabel
+        return (
+          <Link
+            key={item.label}
+            href={item.href}
+            aria-current={isActive ? "page" : undefined}
+            className={cn(
+              "group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200",
+              isActive
+                ? "bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+            )}
+          >
+            <item.icon className="size-4 shrink-0" aria-hidden />
+            <span className="truncate">{item.label}</span>
+            {item.badge && (
+              <span
+                className={cn(
+                  "ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums",
+                  isActive
+                    ? "bg-primary-foreground/20 text-primary-foreground"
+                    : "bg-primary/10 text-primary",
+                )}
+              >
+                {item.badge}
+              </span>
+            )}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
 
-      <div className="space-y-4">
+export function Sidebar({ activeLabel = "Dashboard" }: { activeLabel?: string }) {
+  return (
+    <aside className="flex h-full w-64 flex-col border-r border-border bg-sidebar p-4">
+      <Link href="/" className="mb-6 flex items-center gap-2.5">
+        <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+          <GraduationCap className="size-5" aria-hidden />
+        </div>
+        <div className="leading-tight">
+          <p className="text-base font-semibold text-foreground">Homeroom</p>
+          <p className="text-[11px] text-muted-foreground">Student dashboard</p>
+        </div>
+      </Link>
+
+      <div className="space-y-5">
         <div>
-          <p className="text-[10px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">Menu</p>
-          <nav className="space-y-0.5">
-            {menuItems.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onMouseEnter={() => setHoveredItem(item.label)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  className={cn(
-                    "w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all duration-300",
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground",
-                    hoveredItem === item.label && !isActive && "translate-x-1",
-                  )}
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span className="text-sm">{item.label}</span>
-                  {item.badge && (
-                    <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-semibold px-1.5 py-0.5 rounded-full animate-pulse">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              )
-            })}
-          </nav>
+          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Menu
+          </p>
+          <NavList items={menuItems} activeLabel={activeLabel} />
         </div>
 
         <div>
-          <p className="text-[10px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">General</p>
-          <nav className="space-y-0.5">
-            {generalItems.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onMouseEnter={() => setHoveredItem(item.label)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  className={cn(
-                    "w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all duration-300",
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground",
-                    hoveredItem === item.label && !isActive && "translate-x-1",
-                  )}
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span className="text-sm">{item.label}</span>
-                </Link>
-              )
-            })}
-          </nav>
+          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            General
+          </p>
+          <NavList items={generalItems} activeLabel={activeLabel} />
         </div>
       </div>
     </aside>
