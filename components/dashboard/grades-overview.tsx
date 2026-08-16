@@ -17,6 +17,7 @@ export function GradesOverview() {
 
   return (
     <SectionCard
+      className="h-full"
       eyebrow="01"
       title="Grades"
       freshness={<FreshnessIndicator freshness={freshness} />}
@@ -30,14 +31,14 @@ export function GradesOverview() {
       }
       contentClassName="p-0"
     >
-      <ul className="divide-y divide-border/70">
+      <ul className="flex h-full flex-col divide-y divide-border/70">
         {GRADES.map((g) => {
           const Trend = g.trend >= 0 ? TrendingUp : TrendingDown
           return (
-            <li key={g.slug}>
+            <li key={g.slug} className="flex-1">
               <Link
                 href={`/grades#${g.slug}`}
-                className="group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-accent/60 focus-visible:bg-accent/60 focus-visible:outline-none"
+                className="group flex h-full items-center gap-3 px-5 py-3 transition-colors hover:bg-accent/60 focus-visible:bg-accent/60 focus-visible:outline-none"
               >
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-foreground">{g.course}</p>

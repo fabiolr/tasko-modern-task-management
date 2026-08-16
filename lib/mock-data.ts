@@ -1,9 +1,9 @@
 import type { FreshnessThresholds } from "@/lib/freshness"
 
 export const USER = {
-  name: "Jessin",
-  fullName: "Jessin Sam",
-  email: "jessin@gmail.com",
+  name: "Teo",
+  fullName: "Teo Ribeiro",
+  email: "teo.ribeiro@gmail.com",
   avatar: "/profile.jpg",
   schoolTimeZone: "America/New_York",
   schoolTimeZoneLabel: "school time",

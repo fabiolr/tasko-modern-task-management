@@ -3,7 +3,6 @@
 import { Mail, Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ThemeToggle } from "@/components/dashboard/theme-toggle"
 import { MobileNav } from "@/components/dashboard/mobile-nav"
 import { USER } from "@/lib/mock-data"
 
@@ -26,8 +25,6 @@ export function TopBar() {
       <div className="hidden flex-1 lg:block" />
 
       <div className="flex items-center gap-1.5 sm:gap-2">
-        <ThemeToggle />
-
         <Button variant="ghost" size="icon" className="size-9 rounded-full" aria-label="Messages">
           <Mail className="size-4" aria-hidden />
         </Button>
